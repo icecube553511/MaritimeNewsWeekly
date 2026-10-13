@@ -122,11 +122,14 @@ class JiaobeiScene {
    const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(pos,3));geo.setAttribute('uv',new T.Float32BufferAttribute(uv,2));geo.setAttribute('wear',new T.Float32BufferAttribute(wear,1));geo.setIndex(idx);geo.computeVertexNormals();return geo;
   };
   for(const bottom of [false,true]){const mesh=new T.Mesh(surface(bottom),mat);mesh.castShadow=true;mesh.receiveShadow=true;g.add(mesh);}
-  const mark=document.createElement('canvas');mark.width=512;mark.height=256;const ctx=mark.getContext('2d');ctx.fillStyle='#bb985a';ctx.font='bold 178px SimSun,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('媽祖',256,139);
+  const mark=document.createElement('canvas');mark.width=2048;mark.height=512;const ctx=mark.getContext('2d');
+  const inscription=['扬帆起航','乘风破浪'][index];
+  ctx.fillStyle='#bb985a';ctx.font='bold 424px SimSun,serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(inscription,1024,278);
+  g.userData.inscription=inscription;
   // Small gaps make the original gold inscription look rubbed and aged.
-  ctx.globalCompositeOperation='destination-out';for(let k=0;k<70;k++){ctx.beginPath();ctx.ellipse((k*83)%512,(k*53)%256,1+(k%3),1+(k%2),.4,0,Math.PI*2);ctx.fill();}
-  const mt=new T.CanvasTexture(mark);mt.colorSpace=T.SRGBColorSpace;
-  const decal=new T.Mesh(new T.PlaneGeometry(.77,.36),new T.MeshStandardMaterial({map:mt,transparent:true,roughness:.52,metalness:.55,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));decal.rotation.x=-Math.PI/2;decal.position.set(0,.321,-.005);g.add(decal);
+  ctx.globalCompositeOperation='destination-out';for(let k=0;k<70;k++){ctx.beginPath();ctx.ellipse((k*332)%2048,(k*106)%512,1+(k%3),1+(k%2),.4,0,Math.PI*2);ctx.fill();}
+  const mt=new T.CanvasTexture(mark);mt.colorSpace=T.SRGBColorSpace;mt.anisotropy=tex.anisotropy;
+  const decal=new T.Mesh(new T.PlaneGeometry(1.78,.40),new T.MeshStandardMaterial({map:mt,transparent:true,roughness:.52,metalness:.55,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));decal.rotation.x=-Math.PI/2;if(index===0)decal.rotation.z=Math.PI;decal.position.set(0,.321,-.015);decal.name='gold-inscription';g.add(decal);
   return g;
  }
  prepareDepthOfField(){
